@@ -1,4 +1,4 @@
-package main
+package game
 
 import (
 	"image/color"
@@ -31,7 +31,7 @@ var possibleMoves map[int][]int = map[int][]int{
 type board struct {
 	widget.BaseWidget
 	objects []fyne.CanvasObject
-	game    *game
+	game    *Game
 	grid    *fyne.Container
 }
 
@@ -100,7 +100,7 @@ func (b *board) isMovePossible(src, dst int) bool {
 	return false
 }
 
-func newBoard(g *game) *board {
+func newBoard(g *Game) *board {
 	bg := canvas.NewRectangle(color.White)
 	grid := container.NewGridWithColumns(4)
 
