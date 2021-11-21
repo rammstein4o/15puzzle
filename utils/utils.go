@@ -1,6 +1,10 @@
 package utils
 
-import "math"
+import (
+	"fmt"
+	"math"
+	"time"
+)
 
 func IsSolvable(puzzle []uint8) bool {
 	puzzleLen := len(puzzle)
@@ -30,4 +34,17 @@ func IsSolvable(puzzle []uint8) bool {
 	}
 
 	return parity%2 == 0
+}
+
+func FormatDuration(d time.Duration) string {
+	if d == 0 {
+		return "00:00:00"
+	}
+	d = d.Round(time.Second)
+	h := d / time.Hour
+	d -= h * time.Hour
+	m := d / time.Minute
+	d -= m * time.Minute
+	s := d / time.Second
+	return fmt.Sprintf("%02d:%02d:%02d", h, m, s)
 }

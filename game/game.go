@@ -5,9 +5,7 @@ import (
 	"time"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/rammstein4o/15puzzle/utils"
 )
@@ -18,6 +16,22 @@ type Game struct {
 	win     fyne.Window
 	puzzle  [16]uint8
 	board   *board
+	toolbar *toolbar
+	timer   *timer
+}
+
+func (g *Game) init() *Game {
+	g.ExtendBaseWidget(g)
+	g.Shuffle()
+	g.timer = newTimer(g)
+	g.toolbar = newToolbar(g)
+	g.board = newBoard(g)
+	g.objects = []fyne.CanvasObject{
+		g.toolbar,
+		g.board,
+	}
+
+	return g
 }
 
 func (g *Game) CreateRenderer() fyne.WidgetRenderer {
@@ -27,13 +41,11 @@ func (g *Game) CreateRenderer() fyne.WidgetRenderer {
 func (g *Game) Destroy() {}
 
 func (g *Game) Layout(s fyne.Size) {
-	toolbarSize := fyne.NewSize(s.Width, 50)
-	gridSize := fyne.NewSize(s.Width, s.Height-50)
+	g.toolbar.Resize(fyne.NewSize(s.Width, 50))
+	g.toolbar.Move(fyne.NewPos(0, 0))
 
-	g.objects[0].Resize(toolbarSize)
-	g.objects[0].Move(fyne.NewPos(0, 0))
-	g.objects[1].Resize(gridSize)
-	g.objects[1].Move(fyne.NewPos(0, 50))
+	g.board.Resize(fyne.NewSize(s.Width, s.Height-50))
+	g.board.Move(fyne.NewPos(0, 50))
 }
 
 func (g *Game) MinSize() fyne.Size {
@@ -78,33 +90,10 @@ func (g *Game) SwitchItems(src, dst int) {
 	g.puzzle[src], g.puzzle[dst] = g.puzzle[dst], g.puzzle[src]
 }
 
-func (g *Game) buildObjects() []fyne.CanvasObject {
-	g.Shuffle()
-	g.board = newBoard(g)
-
-	return []fyne.CanvasObject{
-		widget.NewToolbar(
-			widget.NewToolbarAction(theme.ViewRefreshIcon(), func() {
-				g.Shuffle()
-				g.board.Refresh()
-			}),
-			widget.NewToolbarAction(theme.LogoutIcon(), func() {
-				g.win.Close()
-			}),
-		),
-		container.NewMax(
-			g.board,
-		),
-	}
-}
-
 func NewGame(win fyne.Window) *Game {
 	g := &Game{
 		win: win,
 	}
 
-	g.ExtendBaseWidget(g)
-	g.objects = g.buildObjects()
-
-	return g
+	return g.init()
 }

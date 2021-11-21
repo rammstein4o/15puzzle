@@ -35,6 +35,19 @@ type board struct {
 	grid    *fyne.Container
 }
 
+func (b *board) init() *board {
+	b.ExtendBaseWidget(b)
+
+	bg := canvas.NewRectangle(color.White)
+	b.grid = container.NewGridWithColumns(4)
+
+	b.objects = []fyne.CanvasObject{
+		container.NewMax(bg, container.NewPadded(b.grid)),
+	}
+
+	return b
+}
+
 func (b *board) CreateRenderer() fyne.WidgetRenderer {
 	return b
 }
@@ -78,11 +91,7 @@ func (b *board) MoveTile(t *tile) {
 	}
 
 	if b.isMovePossible(src, dst) {
-		// Switch tiles in grid
-		b.grid.Objects[src], b.grid.Objects[dst] = b.grid.Objects[dst], b.grid.Objects[src]
-		b.grid.Refresh()
-
-		// Switch tiles in puzzle
+		b.switchItems(src, dst)
 		b.game.SwitchItems(src, dst)
 	}
 
@@ -100,22 +109,15 @@ func (b *board) isMovePossible(src, dst int) bool {
 	return false
 }
 
+func (b *board) switchItems(src, dst int) {
+	b.grid.Objects[src], b.grid.Objects[dst] = b.grid.Objects[dst], b.grid.Objects[src]
+	b.grid.Refresh()
+}
+
 func newBoard(g *Game) *board {
-	bg := canvas.NewRectangle(color.White)
-	grid := container.NewGridWithColumns(4)
-
-	// for i := 0; i <= 15; i++ {
-	// 	grid.Add(newTile(g, g.puzzle[i]))
-	// }
-
-	c := &board{
-		objects: []fyne.CanvasObject{
-			container.NewMax(bg, container.NewPadded(grid)),
-		},
+	b := &board{
 		game: g,
-		grid: grid,
 	}
 
-	c.ExtendBaseWidget(c)
-	return c
+	return b.init()
 }
