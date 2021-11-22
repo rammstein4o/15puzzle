@@ -28,7 +28,8 @@ func (t *tile) Layout(s fyne.Size) {
 }
 
 func (t *tile) MinSize() fyne.Size {
-	return fyne.NewSize(60, 60)
+	size := gameMinWidth / float32(t.board.game.puzzleCols)
+	return fyne.NewSize(size, size)
 }
 
 func (t *tile) Objects() []fyne.CanvasObject {

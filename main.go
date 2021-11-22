@@ -18,9 +18,10 @@ func main() {
 	app := app.NewWithID(appID)
 	app.SetIcon(resourceIconPng)
 
-	win := app.NewWindow(appName)
+	title := app.Preferences().StringWithFallback("windowTitle", appName)
+	win := app.NewWindow(title)
 
-	g := game.NewGame(win)
+	g := game.NewGame(app, win)
 
 	win.SetContent(g)
 	win.ShowAndRun()

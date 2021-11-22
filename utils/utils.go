@@ -6,14 +6,14 @@ import (
 	"time"
 )
 
-func IsSolvable(puzzle []uint8) bool {
-	puzzleLen := len(puzzle)
+func IsSolvable(seed []uint8) bool {
+	puzzleLen := len(seed)
 	puzzleCols := int(math.Sqrt(float64(puzzleLen)))
 	parity := 0
 	row := 0
 	blankRow := 0
 
-	for i, val := range puzzle {
+	for i, val := range seed {
 		if i%puzzleCols == 0 {
 			row++
 		}
@@ -23,7 +23,7 @@ func IsSolvable(puzzle []uint8) bool {
 		}
 
 		for j := i + 1; j < puzzleLen; j++ {
-			if val > puzzle[j] && puzzle[j] != 0 {
+			if val > seed[j] && seed[j] != 0 {
 				parity++
 			}
 		}
@@ -47,4 +47,12 @@ func FormatDuration(d time.Duration) string {
 	d -= m * time.Minute
 	s := d / time.Second
 	return fmt.Sprintf("%02d:%02d:%02d", h, m, s)
+}
+
+func GenerateSeed(size int) []uint8 {
+	seed := []uint8{}
+	for i := 0; i < size; i++ {
+		seed = append(seed, uint8(i))
+	}
+	return seed
 }

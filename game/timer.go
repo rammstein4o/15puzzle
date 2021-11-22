@@ -13,19 +13,26 @@ import (
 )
 
 type timer struct {
-	widget.ToolbarItem
+	widget.BaseWidget
 	game    *Game
 	seconds time.Duration
 	txt     *canvas.Text
-	object  fyne.CanvasObject
 	ticker  ticker.Interface
+	objects []fyne.CanvasObject
 }
 
 func (t *timer) init() *timer {
+	t.ExtendBaseWidget(t)
 	t.seconds = 0
 	t.txt = canvas.NewText("00:00:00", color.White)
-	t.object = container.NewCenter(t.txt)
 	t.ticker = ticker.NewDefaultTicker()
+
+	t.objects = []fyne.CanvasObject{
+		container.NewCenter(
+			t.txt,
+		),
+	}
+
 	return t
 }
 
@@ -34,18 +41,32 @@ func (t *timer) increment() {
 	t.Refresh()
 }
 
-func (t *timer) ToolbarObject() fyne.CanvasObject {
-	return t.object
+func (t *timer) CreateRenderer() fyne.WidgetRenderer {
+	return t
 }
 
-func (t *timer) Reset() {
-	t.seconds = 0
-	t.Refresh()
+func (t *timer) Destroy() {}
+
+func (t *timer) Layout(s fyne.Size) {
+	t.objects[0].Resize(s)
+}
+
+func (t *timer) MinSize() fyne.Size {
+	return fyne.NewSize(gameMinWidth/3, toolbarHeight)
+}
+
+func (t *timer) Objects() []fyne.CanvasObject {
+	return t.objects
 }
 
 func (t *timer) Refresh() {
 	t.txt.Text = utils.FormatDuration(t.seconds)
 	t.txt.Refresh()
+}
+
+func (t *timer) Reset() {
+	t.seconds = 0
+	t.Refresh()
 }
 
 func (t *timer) Start() {
@@ -67,6 +88,10 @@ func (t *timer) Resume() {
 
 func (t *timer) Stop() {
 	t.ticker.Stop()
+}
+
+func (t *timer) IsPaused() bool {
+	return t.ticker.IsPaused()
 }
 
 func newTimer(game *Game) *timer {
