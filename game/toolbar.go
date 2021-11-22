@@ -24,32 +24,47 @@ func (t *toolbar) init() *toolbar {
 	t.prefsBtn = widget.NewButtonWithIcon("", theme.SettingsIcon(), func() {
 		var newPuzzleType PuzzleType
 
-		gameTypeSelect := widget.NewFormItem(
-			"Game Type",
-			widget.NewSelect(
-				[]string{"8 Puzzle", "15 Puzzle", "24 Puzzle", "35 Puzzle"},
-				func(selected string) {
-					switch selected {
-					case "8 Puzzle":
-						newPuzzleType = Puzzle8
-					case "24 Puzzle":
-						newPuzzleType = Puzzle24
-					case "35 Puzzle":
-						newPuzzleType = Puzzle35
-					case "15 Puzzle":
-						fallthrough
-					default:
-						newPuzzleType = Puzzle15
-					}
-				},
-			),
+		gameTypeSelect := widget.NewSelect(
+			[]string{"8 Puzzle", "15 Puzzle", "24 Puzzle", "35 Puzzle"},
+			func(selected string) {
+				switch selected {
+				case "8 Puzzle":
+					newPuzzleType = Puzzle8
+				case "24 Puzzle":
+					newPuzzleType = Puzzle24
+				case "35 Puzzle":
+					newPuzzleType = Puzzle35
+				case "15 Puzzle":
+					fallthrough
+				default:
+					newPuzzleType = Puzzle15
+				}
+			},
 		)
+
+		switch t.game.puzzleType {
+		case Puzzle8:
+			gameTypeSelect.SetSelected("8 Puzzle")
+		case Puzzle24:
+			gameTypeSelect.SetSelected("24 Puzzle")
+		case Puzzle35:
+			gameTypeSelect.SetSelected("35 Puzzle")
+		case Puzzle15:
+			fallthrough
+		default:
+			gameTypeSelect.SetSelected("15 Puzzle")
+		}
 
 		dialog.ShowForm(
 			"Preferences",
 			"Save",
 			"Cancel",
-			[]*widget.FormItem{gameTypeSelect},
+			[]*widget.FormItem{
+				widget.NewFormItem(
+					"Game Type",
+					gameTypeSelect,
+				),
+			},
 			func(res bool) {
 				if res {
 					t.game.SwitchPuzzleType(newPuzzleType)

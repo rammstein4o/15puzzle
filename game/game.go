@@ -167,6 +167,9 @@ func (g *Game) SwitchPuzzleType(pt PuzzleType) {
 		title := fmt.Sprintf("%d Puzzle", g.puzzleLen-1)
 		g.app.Preferences().SetString("windowTitle", title)
 		g.win.SetTitle(title)
+
+		// Reset the timer
+		g.timer.Reset()
 	}
 	g.Refresh()
 }
