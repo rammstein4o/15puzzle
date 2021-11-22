@@ -2,11 +2,11 @@ package game
 
 import (
 	"fmt"
-	"image/color"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -46,14 +46,14 @@ func newTile(brd *board, val uint8) *tile {
 	var objects []fyne.CanvasObject
 
 	if val != 0 {
-		txt := canvas.NewText(fmt.Sprintf("%v", val), color.White)
+		txt := canvas.NewText(fmt.Sprintf("%v", val), theme.ForegroundColor())
 		txt.TextStyle = fyne.TextStyle{
 			Bold: true,
 		}
 
 		objects = append(
 			objects,
-			canvas.NewRectangle(color.RGBA{0x22, 0x66, 0x66, 0xFF}),
+			canvas.NewRectangle(brd.game.theme.TileColor()),
 			container.NewCenter(txt),
 		)
 	}

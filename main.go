@@ -3,6 +3,7 @@ package main
 import (
 	"fyne.io/fyne/v2/app"
 	"github.com/rammstein4o/15puzzle/game"
+	"github.com/rammstein4o/15puzzle/utils"
 )
 
 const (
@@ -15,13 +16,16 @@ const (
 //go:generate fyne bundle -o icon.go Icon.png
 
 func main() {
+	theme := utils.NewTheme()
+
 	app := app.NewWithID(appID)
 	app.SetIcon(resourceIconPng)
+	app.Settings().SetTheme(theme)
 
 	title := app.Preferences().StringWithFallback("windowTitle", appName)
 	win := app.NewWindow(title)
 
-	g := game.NewGame(app, win)
+	g := game.NewGame(app, win, theme)
 
 	win.SetContent(g)
 	win.ShowAndRun()

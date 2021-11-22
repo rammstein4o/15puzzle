@@ -1,12 +1,12 @@
 package game
 
 import (
-	"image/color"
 	"math"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -20,7 +20,7 @@ type board struct {
 func (b *board) init() *board {
 	b.ExtendBaseWidget(b)
 
-	bg := canvas.NewRectangle(color.White)
+	bg := canvas.NewRectangle(theme.ForegroundColor())
 	b.grid = container.NewGridWithColumns(b.game.puzzleCols)
 
 	b.objects = []fyne.CanvasObject{

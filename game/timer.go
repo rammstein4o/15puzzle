@@ -1,12 +1,12 @@
 package game
 
 import (
-	"image/color"
 	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/rammstein4o/15puzzle/utils"
 	"github.com/rammstein4o/ticker"
@@ -24,7 +24,7 @@ type timer struct {
 func (t *timer) init() *timer {
 	t.ExtendBaseWidget(t)
 	t.seconds = 0
-	t.txt = canvas.NewText("00:00:00", color.White)
+	t.txt = canvas.NewText("00:00:00", theme.ForegroundColor())
 	t.ticker = ticker.NewDefaultTicker()
 
 	t.objects = []fyne.CanvasObject{

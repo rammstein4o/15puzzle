@@ -31,6 +31,7 @@ type Game struct {
 	objects    []fyne.CanvasObject
 	app        fyne.App
 	win        fyne.Window
+	theme      utils.ThemeInteface
 	puzzleType PuzzleType
 	puzzleLen  int
 	puzzleCols int
@@ -174,10 +175,11 @@ func (g *Game) SwitchPuzzleType(pt PuzzleType) {
 	g.Refresh()
 }
 
-func NewGame(app fyne.App, win fyne.Window) *Game {
+func NewGame(app fyne.App, win fyne.Window, theme utils.ThemeInteface) *Game {
 	g := &Game{
-		app: app,
-		win: win,
+		app:   app,
+		win:   win,
+		theme: theme,
 	}
 
 	return g.init()
